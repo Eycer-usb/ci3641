@@ -26,6 +26,7 @@ readline.question(solicitud, args => {
     readline.close();
 });
 
+// Definicion de Potencia Modulada
 function potenciaModulada( a, b, c){
     if (b == 0) {
         return 1

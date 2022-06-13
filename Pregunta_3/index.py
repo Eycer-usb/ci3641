@@ -34,6 +34,7 @@ de memoria que se manejará:\n> "))
     #mostrar(memoria, tamanios_disponibles, )
     return [ memoria, tamanios_disponibles, potencia ]
 
+# Procesa la query recibida segun su tipo
 def ejecutar_solicitud(query, memoria, tamanios_disponibles, potencia, diccionario_nombres):
     args = query.split(' ')
     instruccion = args[0]
@@ -57,6 +58,9 @@ def ejecutar_solicitud(query, memoria, tamanios_disponibles, potencia, diccionar
     else:
         print("Instruccion Invalida")
 
+
+#   Marca en el Arreglo de memoria el nombre dado en las posiciones
+#   Correspondientes
 def etiquetar_memoria(memoria, indice, nombre, cantidad, total_reservar):
     for i in range(indice, indice+cantidad):
         memoria[i] = nombre
@@ -64,6 +68,7 @@ def etiquetar_memoria(memoria, indice, nombre, cantidad, total_reservar):
     for i in range(indice+cantidad, indice+total_reservar):
         memoria[i] = -1
 
+#   Elimina los nombres del Arreglo de Memoria
 def desetiquetar_memoria( memoria, indice ):
     nombre = memoria[indice]
     c = 0
@@ -74,6 +79,8 @@ def desetiquetar_memoria( memoria, indice ):
         i += 1
     return  c
 
+#   Elimina del diccionario que contiene los tamanos disponibles
+#   un tamano dado
 def eliminar_tamanio_disponible(tamanios_disponibles, tamanio_a_reservar):
 
     if( tamanio_a_reservar in tamanios_disponibles and \
@@ -87,13 +94,17 @@ def eliminar_tamanio_disponible(tamanios_disponibles, tamanio_a_reservar):
     else:
         print("El espacio no esta disponible")
         return -1
+
+#   Inserta en el diccionario de tamanos disponibles un nuevo tamano
 def agregar_tamanio_disponible( tamanios_disponibles, tamanio_a_reservar, indice ):
     if (tamanio_a_reservar in tamanios_disponibles):
         tamanios_disponibles[tamanio_a_reservar].append(indice)
     else:
         tamanios_disponibles[tamanio_a_reservar] = [ indice ]
 
-
+#   Funcion recursiva para dividir espacios de memoria (potencias de 2)
+#  en particiones iguales hasta alcanzar el tamano mas ajustado para la 
+# informacion a asignar
 def particionar( tamanios_disponibles, tamanio_particionar, tamanio_objetivo ):
     if tamanio_particionar != tamanio_objetivo:
         indice = eliminar_tamanio_disponible(tamanios_disponibles, tamanio_particionar)
@@ -102,8 +113,7 @@ def particionar( tamanios_disponibles, tamanio_particionar, tamanio_objetivo ):
             indice+tamanio_particionar//2)
         particionar(tamanios_disponibles, tamanio_particionar//2, tamanio_objetivo)
 
-
-
+#   Procesa la solicitud de reservar un espacio en la memoria
 def reservar(nombre, cantidad, memoria, tamanios_disponibles, potencia, diccionario_nombres):
     
     if nombre in diccionario_nombres:
@@ -131,8 +141,13 @@ def reservar(nombre, cantidad, memoria, tamanios_disponibles, potencia, dicciona
         else:
             print("No hay suficiente espacio en memoria")
 
+#   Realiza un merge de particiones iguales adyacentes y las convierte 
+#   en una particion del doble de su tamano
 def unir_particiones_adyacentes(tamanios_disponibles, tamanio, indice, total):
 
+    # Considerando las particiones como un arbol binario
+    # calculamos si la particion dada tiene un nodo
+    # con el mismo padre y si es asi los une
     clust = indice // tamanio
     bro = None
     #Hijo izquierdo
@@ -142,7 +157,8 @@ def unir_particiones_adyacentes(tamanios_disponibles, tamanio, indice, total):
     else:
         bro = indice - tamanio
         
-
+    # Recorremos recursivamente uniendo las particiones adyacentes
+    # subiendo en el arbol
     if bro > 0 and bro in tamanios_disponibles[tamanio]:
         i = indice
         if (bro < i): i, bro = bro, i
@@ -155,7 +171,8 @@ def unir_particiones_adyacentes(tamanios_disponibles, tamanio, indice, total):
     else:
         pass
 
-
+#   Maneja la instruccion para liberar la memoria principal
+#   dado el nombre de un programa en memoria
 def liberar(nombre, diccionario_de_nombres, memoria, tamanios_disponibles, total):
     if nombre in diccionario_de_nombres:
         indice = diccionario_de_nombres[nombre]
@@ -168,7 +185,8 @@ def liberar(nombre, diccionario_de_nombres, memoria, tamanios_disponibles, total
         print("No hay memoria reservada a ese nombre")
 
 
-
+#   Pos Muestra el estado de la memoria en la pantalla
+#   Subrutina manejadora de la instruccion MOSTRAR
 def mostrar(memoria, tamanios_disponibles):
     print("\nEstado de Memoria")
     print(memoria)
@@ -179,9 +197,11 @@ def mostrar(memoria, tamanios_disponibles):
         print("{} -> {}".format(tamanio, indice ))
     print('\n')
 
+# Finaliza la ejecucion del programa
 def salir():
     sys.exit()
 
+#Funcion Principal
 def main():
     bienvenido()
     memoria, tamanios_disponibles, potencia = iniciar()
