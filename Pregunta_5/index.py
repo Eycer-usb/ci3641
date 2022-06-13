@@ -6,7 +6,7 @@
 #   Profesor: Ricardo Monascal
 #   Fecha: 2022/06/12 (yyyy/mm/dd)
 ##################################################
-from ast import arg
+
 import sys
 
 
