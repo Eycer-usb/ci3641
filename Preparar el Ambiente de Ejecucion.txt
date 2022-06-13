@@ -1,2 +1,2 @@
 Para los modulos de Javascript es necesario node
-Para los de python es interprete vertion superior a 3
+Para los de python el interprete vertion superior a 3
